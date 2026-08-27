@@ -1,0 +1,51 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        Deque<Integer> deque = new ArrayDeque<>();
+        Map<Integer, Integer> frequencyMap = new HashMap<>();
+        
+        int n = in.nextInt();
+        int m = in.nextInt();
+        int maxUnique = 0;
+
+        for (int i = 0; i < n; i++) {
+            int num = in.nextInt();
+            
+            // Add element to deque and update frequency map
+            deque.addLast(num);
+            frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+            
+            // Maintain window size m
+            if (deque.size() == m) {
+                // Number of unique elements is the size of the keySet
+                int currentUnique = frequencyMap.size();
+                if (currentUnique > maxUnique) {
+                    maxUnique = currentUnique;
+                }
+                
+                // If maximum possible unique elements reached, break early
+                if (maxUnique == m) {
+                    break;
+                }
+                
+                // Remove the oldest element going out of the window
+                int removed = deque.removeFirst();
+                int count = frequencyMap.get(removed);
+                if (count == 1) {
+                    frequencyMap.remove(removed);
+                } else {
+                    frequencyMap.put(removed, count - 1);
+                }
+            }
+        }
+        
+        System.out.println(maxUnique);
+        in.close();
+    }
+}
